@@ -1,4 +1,6 @@
-    $( document ).ready(function() {
+var server = "https://eonet.sci.gsfc.nasa.gov/api/v3";
+
+     $( document ).ready(function() {
         $.getJSON( server + "/events", {
             status: "open",
             limit: 20
