@@ -1,4 +1,3 @@
-    // First, show the list of events
     $( document ).ready(function() {
         $.getJSON( server + "/events", {
             status: "open",
@@ -20,29 +19,21 @@
             });
     });
 
-    // Show the available layers for the event category
     function showLayers(eventId) {
-        // hide the events list
         $( "#eventSelect" ).hide();
         $( "#layerSelect" ).show();
 
-        // fetch the single event feed
         $.getJSON( server + "/events/" + eventId )
             .done(function( event ) {
-                // Get the date and first location of the event.
-                // Events can have multiple locations but we are simplifying here.
                 var location = event.geometry[0];
 
                 $( "#eventTitle" ).append(": "+event.title+", "+location.date.substring(0,10));
 
-                // Show list of categories and children layers
                 $.each( event.categories, function( key, category ) {
                     $( "#layerList" ).append(
                         "<dt>"+category.title+"</dt> "
                     );
 
-                    // Get the applicable layers for the specific event category.
-                    // Only include WMTS_1_0_0 layers for now, will add WMS example later.
                     $.getJSON( server + "/layers/" + category.id )
                         .done(function( data ) {
                             var layers = data['categories'][0]['layers'];
@@ -66,7 +57,6 @@
 
         var center = getCenter(location);
 
-        // quick and dirty way to extract day string from full ISO datetime
         var mapTime = new Date(location.date).toJSON().substring(0,10);
 
         displayMap(layer.serviceUrl, layer.name,
@@ -78,17 +68,6 @@
         if (geojson.type == "Point") {
             return geojson.coordinates;
         } else if (geojson.type == "Polygon") {
-            /*
-            For this test we are going to compute the center point of the bounding box
-             that encloses the geoJson Polygon.
-
-             Since the Polygon specification consists of an outer ring and then inner holes,
-             we will only compute the center of the first (outer) LinearRing in the Polygon.
-
-             Convert these coordinates to 0-360 to make it easier
-             */
-
-            // use the first point of the first LinearRing as the default for calculations
             var ullat = geojson.coordinates[0][0][1] + 90;
             var ullon = geojson.coordinates[0][0][0] + 180;
             var lrlat = geojson.coordinates[0][0][1] + 90;
@@ -96,7 +75,6 @@
 
             for (i = 0; i < geojson.coordinates[0].length; i++) {
 
-                // longitudes
                 if (geojson.coordinates[0][i][0] + 180 > ullon) {
                     ullon = geojson.coordinates[0][i][0] + 180;
                 }
@@ -104,7 +82,6 @@
                     lrlon = geojson.coordinates[0][i][0] + 180;
                 }
 
-                // latitudes
                 if (geojson.coordinates[0][i][1] + 90 > ullat) {
                     ullat = geojson.coordinates[0][i][1] + 90;
                 }
@@ -121,7 +98,6 @@
     }
 
     function displayMap(serviceUrl, layerName, center, dateStr, format, matrixSet) {
-        // call empty() to make sure another map doesn't already exist there
         $( "#map" ).empty();
 
         var map = new ol.Map({
