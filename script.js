@@ -1,5 +1,6 @@
 // API endpoint
 var server = "https://eonet.sci.gsfc.nasa.gov/api/v3";
+var GIBSendpoint = "https://gibs.earthdata.nasa.gov/wmts/epsg4326/best/wmts.cgi";
      // When document is ready (done loading)
      $( document ).ready(function() {
         // Grab the API JSON for events
@@ -9,6 +10,7 @@ var server = "https://eonet.sci.gsfc.nasa.gov/api/v3";
         }) // when done
             .done(function( data ) {
              // for each event
+                defaultMap();
                 $.each( data.events, function( key, event ) {
                      // add to the list
                     $( "#eventList" ).append(
@@ -66,6 +68,18 @@ var server = "https://eonet.sci.gsfc.nasa.gov/api/v3";
             });
     }
 
+
+    function defaultMap() {
+        var serviceURL = GIBSendpoint;
+        var name = "VIIRS_SNPP_CorrectedReflectance_TrueColor";
+        var center = [41.9028,12.4964];
+        var time = "2020-09-18T16:30:00Z";
+        var format = "image/jpeg";
+        var tileMatrix = "250m";
+        displayMap(serviceURL, name, center, time, format, tileMatrix);
+
+    }
+
     function showMap(encodedLayer, encodedLocation) {
          // the layer (a NASA id for layer)
         var layer = JSON.parse(decodeURIComponent(encodedLayer));
@@ -80,6 +94,7 @@ var server = "https://eonet.sci.gsfc.nasa.gov/api/v3";
             center, mapTime,
             layer.parameters[0].FORMAT, layer.parameters[0].TILEMATRIXSET);
     }
+
 
     function getCenter(geojson) {
         if (geojson.type == "Point") {
@@ -120,11 +135,11 @@ var server = "https://eonet.sci.gsfc.nasa.gov/api/v3";
 
         var map = new ol.Map({
             view: new ol.View({
-                maxResolution: .01, 
+                maxResolution: .2, 
                 projection: ol.proj.get("EPSG:4326"), // the map projection
                 extent: [-180, -90, 180, 90], // Map over the whole world
                 center: center, // center the map on the center coords we got earlier
-                zoom: 3, // zoom at start
+                zoom: 0, // zoom at start
                 maxZoom: 20 // maximum zoom
             }),
             target: "map",
@@ -139,7 +154,7 @@ var server = "https://eonet.sci.gsfc.nasa.gov/api/v3";
          
          // NASA tileGrid source data
          
-         // READ THE DOCS FOR THE API
+        // READ THE DOCS FOR THE API
         var source = new ol.source.WMTS({
             url: serviceUrl + "?time=" + dateStr, // the WMTS needs the time to get
             layer: layerName, // the layer we get from the button press
