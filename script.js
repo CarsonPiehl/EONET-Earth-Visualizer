@@ -120,11 +120,12 @@ function mapChange() {
         } 
         if (start.split("/").length == 2)  {
           optimalTime = optimalTime.split("-");
-          optimalTime = optimalTime[0] + "-" + optimalTime[1];
+          optimalTime = optimalTime[0] + "-" + optimalTime[1]+"-01";
         }
       }
       else {
-        optimalTime = timeRange;
+        optimalTime = timeRange+"-01-01";
+        document.getElementById("errormsg").innerHTML = "The closest possible date was " + timeRange;
       }
       document.getElementById("time").innerHTML = optimalTime;
       map(optimalTime,layerData[0],"image/"+layerData[1],layerData[2]);
