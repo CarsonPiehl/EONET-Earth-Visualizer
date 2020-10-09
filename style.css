@@ -1,9 +1,13 @@
-.selections {
-  width: 600px;
-  float: left;
-}
 .map {
   height: 100vh;
   width: 100vw;
   float: left;
 }
+h1 {
+  text-align: center;
+  width: 20vw;
+}
+
+#container {
+}
+

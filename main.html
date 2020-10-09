@@ -14,14 +14,17 @@
 
 </head>
 <body>
-<div id="selections" class="selections">
-    <h2>EONET How-to<span id="eventTitle"></span></h2>
-    <div id="eventSelect"><dl id="eventList"></dl></div>
-    <div id="layerSelect"><dl id="layerList"></dl></div>
+    <div id="map" class="map">
+    </div>
+
+
+<h1 id= "eventTitle"> True Color MODIS Satellite</h1>
+<br>
+<div id="container">
 </div>
-<div id="map" class="map"></div>
-
-
+<input type="date" id="dateinput"></input>
+<h3 id="errormsg"></h3>
+<p id="time"> </p>
+<button onclick="mapChange();"> Change Map! </button>
 </body>
 </html>
-
